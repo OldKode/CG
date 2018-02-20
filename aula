@@ -1,0 +1,48 @@
+//let pontoUmX = 0;
+//let pontoUmY = 0;
+var pontoUm     = [0,0];
+let pontUmAtivo = false;
+var pontoDois    = [0,0];
+
+window.addEventListener("click", pegaPonto);
+
+function pegaPonto(evt){
+    if(!pontUmAtivo){
+      pontoUm[0] = evt.x;
+      pontoUm[1] = evt.y;
+      pontUmAtivo = true;
+    } else {
+      pontoDois[0] = evt.x;
+      pontoDois[1] = evt.y;
+      pontUmAtivo = false;
+      dist(pontoUm,pontoDois);
+      console.log(dist(pontoUm,pontoDois));
+    }
+}
+
+function dist(pontoUm,pontoDois){
+  var mag =  Math.sqrt(((pontoDois[0]-pontoUm[0])*(pontoDois[0]-pontoUm[0]))+(((pontoDois[1]-pontoUm[1])*((pontoDois[1]-pontoUm[1])))));
+  var ang = Math.atan2(pontoDois,pontoUm);
+  var retorno = [mag,ang];
+  return retorno;
+  //var x = pontoDois[0]-pontoUm[0];
+  //var y = pontoDois[1]-pontoUm[1];
+  //return atan2(y, x);
+}
+  /*let x = evt.x;
+  let y = evt.y;
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  let vertical = ~~((1-(y/h))*100);
+  let hue = ~~((x/w)*360);
+
+  if(isLuz){
+    L = vertical;
+  } else {
+    S = vertical;
+  }
+
+  let cor = `hsl(${hue}, ${S}%, ${L}%)`
+  document.body.style.background = cor;
+  */
