@@ -16,7 +16,8 @@ var aspect = 1;
 var px = 0;
 var py = 0;
 
-var speedMove = 0.01;
+var speedMoveX = 0.01;
+var speedMoveY = 0.01;
 var prob = 0.001;
 
 //Sistema de arquivos
@@ -62,11 +63,11 @@ function linkProgram(vertexShader,fragmentShader){
 function getData(){
 	var points = [
 					0,0,
-					0,1,
-					1,1,
+					0,0.5,
+					0.5,0.5,
 					0,0,
-					1,0,
-					1,1
+					0.5,0,
+					0.5,0.5
 				];
 	return {"points": new Float32Array(points)};
 }
@@ -103,28 +104,37 @@ function animate(){
 	gl.uniform2f(uniformLocation, px, py);
 	aspectLocation = gl.getUniformLocation(shaderProgram, "aspect");
 	gl.uniform1f(aspectLocation, aspect);
-	movePonto()
+	movePonto();
 	gl.drawArrays(gl.TRIANGLES, 0, data.points.length/2);
 	window.requestAnimationFrame(animate);
 }
-
 
 window.addEventListener("mousemove", mover);
 window.addEventListener("resize", resize);
 
 function movePonto(evt){
-	if (Math.random() < prob)
-		speedMove = (Math.random() * 0.01)
+	if (Math.random() < prob){
+		speedMoveX = (Math.random() * 0.01);
+		speedMoveY = (Math.random() * 0.01);
+	}
+
 
 	for (i = 0; i < data.points.length; i++) {
-		if (data.points[i] + speedMove > 1 && i % 2 != 0)
-			speedMove = speedMove * - 1
-			//alterarSentido(-1)
-		if (data.points[i] + speedMove < - 1 && i % 2 != 0)
-			speedMove = speedMove * - 1
+		if (data.points[i] + speedMoveX > 1 && i % 2 != 0)
+			speedMoveX = speedMoveX * - 1
+		if (data.points[i] + speedMoveX < - 1 && i % 2 != 0)
+			speedMoveX = speedMoveX * - 1
 
+		if (data.points[i] + speedMoveY > 2 && i % 2 == 0)
+				speedMoveY = speedMoveY * - 1
+		if (data.points[i] + speedMoveY < -2 && i % 2 == 0)
+				speedMoveY = speedMoveY * - 1
 
-		data.points[i] =+ (data.points[i] + speedMove)
+		if (i % 2 == 0){
+			data.points[i] =+ (data.points[i] + speedMoveY);
+		}else{
+			data.points[i] =+ (data.points[i] + speedMoveX);
+		}
 	}
 
 	positionAttr = gl.getAttribLocation(shaderProgram, "position");
@@ -153,6 +163,9 @@ function resize(evt){
 	canvas.setAttribute("height", h);
 
 	aspect = h/w;
+
+
+
 
 	gl.viewport(0, 0, w, h);
 }
